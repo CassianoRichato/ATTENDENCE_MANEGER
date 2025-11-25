@@ -67,9 +67,8 @@ class LocalDataSource {
 
   Future<void> deleteAttendance(int id) async {
     final db = await _dbHelper.database;
-    await db.update(
+    await db.delete(
       DatabaseHelper.tableAttendances,
-      {'is_active': 0},
       where: 'id = ?',
       whereArgs: [id],
     );
