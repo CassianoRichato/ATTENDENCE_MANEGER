@@ -14,11 +14,11 @@ class LocalDataSource {
       {AttendanceStatus? statusFilter}) async {
     final db = await _dbHelper.database;
 
-    String? whereClause = 'is_active = 1';
+    String? whereClause;
     List<dynamic>? whereArgs;
 
     if (statusFilter != null) {
-      whereClause = 'is_active = 1 AND status = ?';
+      whereClause = 'status = ?';
       whereArgs = [statusFilter.name];
     }
 

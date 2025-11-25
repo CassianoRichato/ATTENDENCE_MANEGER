@@ -67,7 +67,7 @@ class _AttendanceExecutionScreenState extends State<AttendanceExecutionScreen> {
                   const SizedBox(height: 24),
                   _buildImageSection(context, state),
                   const SizedBox(height: 24),
-                  _buildObservationsSection(),
+                  _buildObservationsSection(context),
                   const SizedBox(height: 24),
                   _buildFinishButton(context, state),
                 ],
@@ -235,37 +235,53 @@ class _AttendanceExecutionScreenState extends State<AttendanceExecutionScreen> {
     );
   }
 
-  Widget _buildObservationsSection() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Observações',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+  Widget _buildObservationsSection(BuildContext context) {
+    return BlocBuilder<AttendanceExecutionCubit, AttendanceExecutionState>(
+      builder: (context, state) {
+        // Sincroniza o controller com as observações salvas quando carregar
+        if (state is AttendanceExecutionLoaded) {
+          final savedObservations = state.observations ?? '';
+          if (_observationsController.text != savedObservations) {
+            _observationsController.text = savedObservations;
+            // Move o cursor para o final
+            _observationsController.selection = TextSelection.fromPosition(
+              TextPosition(offset: _observationsController.text.length),
+            );
+          }
+        }
+
+        return Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Observações',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _observationsController,
+                  decoration: const InputDecoration(
+                    hintText: 'Adicione observações sobre o atendimento...',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.note),
                   ),
+                  maxLines: 6,
+                  onChanged: (value) {
+                    context.read<AttendanceExecutionCubit>().updateObservations(
+                          value.trim().isEmpty ? null : value.trim(),
+                        );
+                  },
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _observationsController,
-              decoration: const InputDecoration(
-                hintText: 'Adicione observações sobre o atendimento...',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.note),
-              ),
-              maxLines: 6,
-              onChanged: (value) {
-                context.read<AttendanceExecutionCubit>().updateObservations(
-                      value.trim().isEmpty ? null : value.trim(),
-                    );
-              },
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
