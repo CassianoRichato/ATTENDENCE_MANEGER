@@ -257,6 +257,11 @@ class _AttendanceExecutionScreenState extends State<AttendanceExecutionScreen> {
                 prefixIcon: Icon(Icons.note),
               ),
               maxLines: 6,
+              onChanged: (value) {
+                context.read<AttendanceExecutionCubit>().updateObservations(
+                      value.trim().isEmpty ? null : value.trim(),
+                    );
+              },
             ),
           ],
         ),
@@ -281,12 +286,7 @@ class _AttendanceExecutionScreenState extends State<AttendanceExecutionScreen> {
   }
 
   void _removeImage(BuildContext context) {
-    final currentState = context.read<AttendanceExecutionCubit>().state;
-    if (currentState is AttendanceExecutionLoaded) {
-      context.read<AttendanceExecutionCubit>().emit(
-            AttendanceExecutionLoaded(currentState.attendance),
-          );
-    }
+    context.read<AttendanceExecutionCubit>().removeImage();
   }
 
   Future<void> _finishAttendance(BuildContext context) async {

@@ -13,11 +13,16 @@ class AttendanceExecutionLoading extends AttendanceExecutionState {}
 class AttendanceExecutionLoaded extends AttendanceExecutionState {
   final Attendance attendance;
   final String? capturedImagePath;
+  final String? observations;
 
-  AttendanceExecutionLoaded(this.attendance, {this.capturedImagePath});
+  AttendanceExecutionLoaded(
+    this.attendance, {
+    this.capturedImagePath,
+    this.observations,
+  });
 
   @override
-  List<Object?> get props => [attendance, capturedImagePath];
+  List<Object?> get props => [attendance, capturedImagePath, observations];
 }
 
 class AttendanceExecutionSuccess extends AttendanceExecutionState {}

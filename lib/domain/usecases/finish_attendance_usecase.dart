@@ -10,7 +10,14 @@ class FinishAttendanceUseCase {
   FinishAttendanceUseCase(this.repository);
 
   Future<void> call(
-      Attendance attendance, String? imagePath, String? observations) async {
+    Attendance attendance,
+    String? imagePath,
+    String? observations,
+  ) async {
+    if (imagePath == null || imagePath.isEmpty) {
+      throw Exception('É necessário uma foto para finalizar o atendimento');
+    }
+
     final updatedAttendance = attendance.copyWith(
       status: AttendanceStatus.finished,
       finishedAt: DateTime.now(),

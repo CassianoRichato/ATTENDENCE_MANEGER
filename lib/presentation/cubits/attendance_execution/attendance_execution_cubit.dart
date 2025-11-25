@@ -26,7 +26,11 @@ class AttendanceExecutionCubit extends Cubit<AttendanceExecutionState> {
       emit(AttendanceExecutionLoading());
       final attendance = await _getAttendanceByIdUseCase(id);
       if (attendance != null) {
-        emit(AttendanceExecutionLoaded(attendance));
+        emit(AttendanceExecutionLoaded(
+          attendance,
+          capturedImagePath: attendance.imagePath,
+          observations: attendance.observations,
+        ));
       } else {
         emit(AttendanceExecutionError('Atendimento não encontrado'));
       }
@@ -53,9 +57,18 @@ class AttendanceExecutionCubit extends Cubit<AttendanceExecutionState> {
         emit(AttendanceExecutionLoaded(
           currentState.attendance,
           capturedImagePath: imagePath,
+          observations: currentState.observations,
         ));
       }
     } catch (e) {
+      final currentState = state;
+      if (currentState is AttendanceExecutionLoaded) {
+        emit(AttendanceExecutionLoaded(
+          currentState.attendance,
+          capturedImagePath: currentState.capturedImagePath,
+          observations: currentState.observations,
+        ));
+      }
       emit(AttendanceExecutionError('Erro ao capturar imagem: $e'));
     }
   }
@@ -78,9 +91,18 @@ class AttendanceExecutionCubit extends Cubit<AttendanceExecutionState> {
         emit(AttendanceExecutionLoaded(
           currentState.attendance,
           capturedImagePath: imagePath,
+          observations: currentState.observations,
         ));
       }
     } catch (e) {
+      final currentState = state;
+      if (currentState is AttendanceExecutionLoaded) {
+        emit(AttendanceExecutionLoaded(
+          currentState.attendance,
+          capturedImagePath: currentState.capturedImagePath,
+          observations: currentState.observations,
+        ));
+      }
       emit(AttendanceExecutionError('Erro ao selecionar imagem: $e'));
     }
   }
@@ -90,17 +112,46 @@ class AttendanceExecutionCubit extends Cubit<AttendanceExecutionState> {
       final currentState = state;
       if (currentState is! AttendanceExecutionLoaded) return;
 
+      if (currentState.capturedImagePath == null) {
+        emit(AttendanceExecutionError(
+            'É necessário capturar uma foto antes de finalizar'));
+        emit(currentState);
+        return;
+      }
+
       emit(AttendanceExecutionLoading());
 
       await _finishAttendanceUseCase(
         currentState.attendance,
-        currentState.capturedImagePath,
-        observations,
+        currentState.capturedImagePath!,
+        observations ?? currentState.observations,
       );
 
       emit(AttendanceExecutionSuccess());
     } catch (e) {
       emit(AttendanceExecutionError('Erro ao finalizar atendimento: $e'));
+    }
+  }
+
+  void removeImage() {
+    final currentState = state;
+    if (currentState is AttendanceExecutionLoaded) {
+      emit(AttendanceExecutionLoaded(
+        currentState.attendance,
+        capturedImagePath: null,
+        observations: currentState.observations,
+      ));
+    }
+  }
+
+  void updateObservations(String? observations) {
+    final currentState = state;
+    if (currentState is AttendanceExecutionLoaded) {
+      emit(AttendanceExecutionLoaded(
+        currentState.attendance,
+        capturedImagePath: currentState.capturedImagePath,
+        observations: observations,
+      ));
     }
   }
 }

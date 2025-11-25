@@ -40,6 +40,8 @@ class AttendanceCard extends StatelessWidget {
                       attendance.title,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
+                            color:
+                                attendance.isActive ? null : Colors.grey[600],
                           ),
                     ),
                   ),
@@ -50,7 +52,9 @@ class AttendanceCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   attendance.description!,
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: attendance.isActive ? null : Colors.grey[600],
+                      ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -58,11 +62,19 @@ class AttendanceCard extends StatelessWidget {
               const SizedBox(height: 12),
               Row(
                 children: [
-                  Icon(Icons.calendar_today, size: 16, color: Colors.grey[600]),
+                  Icon(
+                    Icons.calendar_today,
+                    size: 16,
+                    color: attendance.isActive
+                        ? Colors.grey[600]
+                        : Colors.grey[400],
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     dateFormat.format(attendance.createdAt),
-                    style: Theme.of(context).textTheme.bodySmall,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: attendance.isActive ? null : Colors.grey[500],
+                        ),
                   ),
                   const Spacer(),
                   _buildActionButtons(context),
@@ -115,6 +127,7 @@ class AttendanceCard extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
+        // 🔧 Botão EDITAR
         IconButton(
           icon: const Icon(Icons.edit_outlined),
           iconSize: 20,
@@ -126,12 +139,15 @@ class AttendanceCard extends StatelessWidget {
           iconSize: 20,
           color: Colors.red,
           onPressed: onDelete,
-          tooltip: 'Excluir',
+          tooltip: 'Excluir (não poderá ser desfeito)',
         ),
-        Switch(
-          value: attendance.isActive,
-          onChanged: onToggleStatus,
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        Tooltip(
+          message: attendance.isActive ? 'Desativar' : 'Ativar',
+          child: Switch(
+            value: attendance.isActive,
+            onChanged: onToggleStatus,
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
         ),
       ],
     );

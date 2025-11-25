@@ -40,16 +40,30 @@ class _AttendanceFormScreenState extends State<AttendanceFormScreen> {
           if (state is AttendanceFormSuccess) {
             if (widget.attendanceId == null) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Atendimento salvo com sucesso!')),
+                const SnackBar(
+                  content: Text('Atendimento salvo com sucesso!'),
+                  backgroundColor: Colors.green,
+                ),
               );
               Navigator.pop(context, true);
             } else {
               _titleController.text = state.attendance.title;
               _descriptionController.text = state.attendance.description ?? '';
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Atendimento atualizado com sucesso!'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+              Navigator.pop(context, true);
             }
           } else if (state is AttendanceFormError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+              ),
             );
           }
         },

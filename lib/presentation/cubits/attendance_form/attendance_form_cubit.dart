@@ -13,6 +13,8 @@ class AttendanceFormCubit extends Cubit<AttendanceFormState> {
   final UpdateAttendanceUseCase _updateAttendanceUseCase;
   final GetAttendanceByIdUseCase _getAttendanceByIdUseCase;
 
+  Attendance? _loadedAttendance;
+
   AttendanceFormCubit(
     this._createAttendanceUseCase,
     this._updateAttendanceUseCase,
@@ -24,6 +26,7 @@ class AttendanceFormCubit extends Cubit<AttendanceFormState> {
       emit(AttendanceFormLoading());
       final attendance = await _getAttendanceByIdUseCase(id);
       if (attendance != null) {
+        _loadedAttendance = attendance;
         emit(AttendanceFormSuccess(attendance));
       } else {
         emit(AttendanceFormError('Atendimento não encontrado'));
@@ -41,18 +44,27 @@ class AttendanceFormCubit extends Cubit<AttendanceFormState> {
     try {
       emit(AttendanceFormLoading());
 
-      final attendance = Attendance(
-        id: id,
-        title: title,
-        description: description,
-        status: AttendanceStatus.pending,
-        createdAt: id == null ? DateTime.now() : DateTime.now(),
-        updatedAt: id != null ? DateTime.now() : null,
-      );
+      Attendance attendance;
 
       if (id == null) {
+        attendance = Attendance(
+          title: title,
+          description: description,
+          status: AttendanceStatus.pending,
+          createdAt: DateTime.now(),
+        );
         await _createAttendanceUseCase(attendance);
       } else {
+        if (_loadedAttendance == null) {
+          emit(AttendanceFormError('Erro: atendimento não carregado'));
+          return;
+        }
+
+        attendance = _loadedAttendance!.copyWith(
+          title: title,
+          description: description,
+          updatedAt: DateTime.now(),
+        );
         await _updateAttendanceUseCase(attendance);
       }
 
