@@ -10,6 +10,15 @@ class AttendanceFormInitial extends AttendanceFormState {}
 
 class AttendanceFormLoading extends AttendanceFormState {}
 
+class AttendanceFormLoaded extends AttendanceFormState {
+  final Attendance attendance;
+
+  AttendanceFormLoaded(this.attendance);
+
+  @override
+  List<Object?> get props => [attendance];
+}
+
 class AttendanceFormSuccess extends AttendanceFormState {
   final Attendance attendance;
 

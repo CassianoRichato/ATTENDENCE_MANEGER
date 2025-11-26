@@ -127,7 +127,6 @@ class AttendanceCard extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // 🔧 Botão EDITAR
         IconButton(
           icon: const Icon(Icons.edit_outlined),
           iconSize: 20,

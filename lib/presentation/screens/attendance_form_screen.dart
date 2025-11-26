@@ -37,27 +37,21 @@ class _AttendanceFormScreenState extends State<AttendanceFormScreen> {
       },
       child: BlocConsumer<AttendanceFormCubit, AttendanceFormState>(
         listener: (context, state) {
-          if (state is AttendanceFormSuccess) {
-            if (widget.attendanceId == null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Atendimento salvo com sucesso!'),
-                  backgroundColor: Colors.green,
-                ),
-              );
-              Navigator.pop(context, true);
-            } else {
-              _titleController.text = state.attendance.title;
-              _descriptionController.text = state.attendance.description ?? '';
+          if (state is AttendanceFormLoaded) {
+            _titleController.text = state.attendance.title;
+            _descriptionController.text = state.attendance.description ?? '';
+          } else if (state is AttendanceFormSuccess) {
+            final message = widget.attendanceId == null
+                ? 'Atendimento salvo com sucesso!'
+                : 'Atendimento atualizado com sucesso!';
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Atendimento atualizado com sucesso!'),
-                  backgroundColor: Colors.green,
-                ),
-              );
-              Navigator.pop(context, true);
-            }
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(message),
+                backgroundColor: Colors.green,
+              ),
+            );
+            Navigator.pop(context, true);
           } else if (state is AttendanceFormError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

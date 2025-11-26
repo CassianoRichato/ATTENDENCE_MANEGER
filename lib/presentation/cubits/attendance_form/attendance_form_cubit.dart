@@ -27,7 +27,7 @@ class AttendanceFormCubit extends Cubit<AttendanceFormState> {
       final attendance = await _getAttendanceByIdUseCase(id);
       if (attendance != null) {
         _loadedAttendance = attendance;
-        emit(AttendanceFormSuccess(attendance));
+        emit(AttendanceFormLoaded(attendance));
       } else {
         emit(AttendanceFormError('Atendimento não encontrado'));
       }

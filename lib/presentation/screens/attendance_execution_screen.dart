@@ -238,12 +238,10 @@ class _AttendanceExecutionScreenState extends State<AttendanceExecutionScreen> {
   Widget _buildObservationsSection(BuildContext context) {
     return BlocBuilder<AttendanceExecutionCubit, AttendanceExecutionState>(
       builder: (context, state) {
-        // Sincroniza o controller com as observações salvas quando carregar
         if (state is AttendanceExecutionLoaded) {
           final savedObservations = state.observations ?? '';
           if (_observationsController.text != savedObservations) {
             _observationsController.text = savedObservations;
-            // Move o cursor para o final
             _observationsController.selection = TextSelection.fromPosition(
               TextPosition(offset: _observationsController.text.length),
             );

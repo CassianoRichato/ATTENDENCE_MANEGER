@@ -5,7 +5,6 @@ import 'presentation/screens/attendance_list_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Configurar injeção de dependências
   await configureDependencies();
 
   runApp(const MyApp());
