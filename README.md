@@ -1,22 +1,3 @@
-# attendance_manager
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, a# 📱 Attendance Manager - Sistema de Gestão de Atendimentos
-
-<div align="center">
-
 **Aplicativo Flutter profissional para gerenciamento completo de atendimentos com captura de imagens, armazenamento local e controle de status.**
 
 [Recursos](#-recursos) • [Instalação](#-instalação) • [Arquitetura](#-arquitetura) • [Uso](#-uso) • [Testes](#-testes) • [Contribuir](#-contribuindo)
@@ -621,73 +602,18 @@ flutter clean
 
 ---
 
-## 🤝 Contribuindo
-
-Contribuições são muito bem-vindas! Siga estes passos:
-
-### 1. Fork o Projeto
-
-```bash
-# Clique em "Fork" no GitHub
-```
-
-### 2. Crie uma Branch
-
-```bash
-git checkout -b feature/MinhaNovaFeature
-```
-
-### 3. Faça Commit das Mudanças
-
-```bash
-git commit -m 'feat: adiciona nova funcionalidade X'
-```
-
-### 4. Push para a Branch
-
-```bash
-git push origin feature/MinhaNovaFeature
-```
-
-### 5. Abra um Pull Request
-
-Descreva suas mudanças detalhadamente.
-
-### Padrão de Commits
-
-Seguimos [Conventional Commits](https://www.conventionalcommits.org/):
-
-- `feat:` Nova funcionalidade
-- `fix:` Correção de bug
-- `docs:` Documentação
-- `style:` Formatação
-- `refactor:` Refatoração de código
-- `test:` Testes
-- `chore:` Manutenção
-
-### Code Review
-
-Todos os PRs passam por revisão. Certifique-se de:
-
 - ✅ Testes passando
 - ✅ Código formatado (`dart format`)
 - ✅ Sem warnings (`flutter analyze`)
 - ✅ Documentação atualizada
 
----
-
-## 📄 Licença
-
-Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
-
----
 
 ## 👥 Autores
 
 **Seu Nome**
-- GitHub: [@seu-usuario](https://github.com/seu-usuario)
-- LinkedIn: [seu-perfil](https://linkedin.com/in/seu-perfil)
-- Email: seu.email@exemplo.com
+- GitHub: [@CassianoRichato](https://github.com/CassianoRichato)
+- LinkedIn: [cassiano-richato](https://www.linkedin.com/in/cassiano-richato-7844b42b7/)
+- Email: cassianorichato@gmail.com
 
 ---
 
@@ -700,20 +626,5 @@ Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
 
 ---
 
-## 📞 Suporte
-
-Encontrou um problema? Precisa de ajuda?
-
-- 🐛 [Reportar Bug](https://github.com/seu-usuario/attendance-manager/issues)
-- 💡 [Solicitar Feature](https://github.com/seu-usuario/attendance-manager/issues)
-- 📧 Email: suporte@exemplo.com
-
----
-
 <div align="center">
-
-**Desenvolvido com ❤️ usando Flutter**
-
-⭐ Se este projeto te ajudou, considere dar uma estrela!
-
 </div>nd a full API reference.
