@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../domain/entities/attendance.dart';
 import '../../../domain/usecases/get_attendance_by_id_usecase.dart';
 import '../../../domain/usecases/finish_attendance_usecase.dart';
+import '../../../domain/usecases/start_attendance_usecase.dart';
 import '../../../data/datasources/image_storage_service.dart';
 import 'attendance_execution_state.dart';
 
@@ -12,12 +13,14 @@ import 'attendance_execution_state.dart';
 class AttendanceExecutionCubit extends Cubit<AttendanceExecutionState> {
   final GetAttendanceByIdUseCase _getAttendanceByIdUseCase;
   final FinishAttendanceUseCase _finishAttendanceUseCase;
+  final StartAttendanceUseCase _startAttendanceUseCase;
   final ImageStorageService _imageStorageService;
   final ImagePicker _imagePicker = ImagePicker();
 
   AttendanceExecutionCubit(
     this._getAttendanceByIdUseCase,
     this._finishAttendanceUseCase,
+    this._startAttendanceUseCase,
     this._imageStorageService,
   ) : super(AttendanceExecutionInitial());
 
@@ -36,6 +39,21 @@ class AttendanceExecutionCubit extends Cubit<AttendanceExecutionState> {
       }
     } catch (e) {
       emit(AttendanceExecutionError('Erro ao carregar atendimento: $e'));
+    }
+  }
+
+  Future<void> startAttendance() async {
+    try {
+      final currentState = state;
+      if (currentState is! AttendanceExecutionLoaded) return;
+
+      emit(AttendanceExecutionLoading());
+
+      await _startAttendanceUseCase(currentState.attendance);
+
+      await loadAttendance(currentState.attendance.id!);
+    } catch (e) {
+      emit(AttendanceExecutionError('Erro ao iniciar atendimento: $e'));
     }
   }
 

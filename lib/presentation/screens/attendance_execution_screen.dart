@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../core/injection/injection.dart';
+import '../../domain/entities/attendance_status.dart';
 import '../cubits/attendance_execution/attendance_execution_cubit.dart';
 import '../cubits/attendance_execution/attendance_execution_state.dart';
 
@@ -18,6 +19,7 @@ class AttendanceExecutionScreen extends StatefulWidget {
 
 class _AttendanceExecutionScreenState extends State<AttendanceExecutionScreen> {
   final _observationsController = TextEditingController();
+  bool _hasChanges = false;
 
   @override
   void dispose() {
@@ -45,6 +47,10 @@ class _AttendanceExecutionScreenState extends State<AttendanceExecutionScreen> {
                 backgroundColor: Colors.red,
               ),
             );
+          } else if (state is AttendanceExecutionLoaded) {
+            if (state.attendance.status == AttendanceStatus.inProgress) {
+              _hasChanges = true;
+            }
           }
         },
         builder: (context, state) {
@@ -55,22 +61,33 @@ class _AttendanceExecutionScreenState extends State<AttendanceExecutionScreen> {
           }
 
           if (state is AttendanceExecutionLoaded) {
-            return Scaffold(
-              appBar: AppBar(
-                title: const Text('Realizar Atendimento'),
-                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              ),
-              body: ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  _buildAttendanceInfo(state),
-                  const SizedBox(height: 24),
-                  _buildImageSection(context, state),
-                  const SizedBox(height: 24),
-                  _buildObservationsSection(context),
-                  const SizedBox(height: 24),
-                  _buildFinishButton(context, state),
-                ],
+            return WillPopScope(
+              onWillPop: () async {
+                Navigator.pop(context, _hasChanges);
+                return false;
+              },
+              child: Scaffold(
+                appBar: AppBar(
+                  title: const Text('Realizar Atendimento'),
+                  backgroundColor:
+                      Theme.of(context).colorScheme.primaryContainer,
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () => Navigator.pop(context, _hasChanges),
+                  ),
+                ),
+                body: ListView(
+                  padding: const EdgeInsets.all(16),
+                  children: [
+                    _buildAttendanceInfo(context, state),
+                    const SizedBox(height: 24),
+                    _buildImageSection(context, state),
+                    const SizedBox(height: 24),
+                    _buildObservationsSection(context),
+                    const SizedBox(height: 24),
+                    _buildFinishButton(context, state),
+                  ],
+                ),
               ),
             );
           }
@@ -83,7 +100,8 @@ class _AttendanceExecutionScreenState extends State<AttendanceExecutionScreen> {
     );
   }
 
-  Widget _buildAttendanceInfo(AttendanceExecutionLoaded state) {
+  Widget _buildAttendanceInfo(
+      BuildContext context, AttendanceExecutionLoaded state) {
     final attendance = state.attendance;
     final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
 
@@ -143,6 +161,36 @@ class _AttendanceExecutionScreenState extends State<AttendanceExecutionScreen> {
                 ),
               ],
             ),
+            if (attendance.status == AttendanceStatus.pending) ...[
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    await context
+                        .read<AttendanceExecutionCubit>()
+                        .startAttendance();
+
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Atendimento iniciado!'),
+                          backgroundColor: Colors.blue,
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    }
+                  },
+                  icon: const Icon(Icons.play_arrow),
+                  label: const Text('Iniciar Atendimento'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.all(16),
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -285,7 +333,8 @@ class _AttendanceExecutionScreenState extends State<AttendanceExecutionScreen> {
 
   Widget _buildFinishButton(
       BuildContext context, AttendanceExecutionLoaded state) {
-    final canFinish = state.capturedImagePath != null;
+    final canFinish = state.capturedImagePath != null &&
+        state.attendance.status == AttendanceStatus.inProgress;
 
     return ElevatedButton.icon(
       onPressed: canFinish ? () => _finishAttendance(context) : null,

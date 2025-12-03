@@ -31,6 +31,8 @@ import 'package:attendance_manager/domain/usecases/get_attendance_by_id_usecase.
     as _i606;
 import 'package:attendance_manager/domain/usecases/get_attendances_usecase.dart'
     as _i375;
+import 'package:attendance_manager/domain/usecases/start_attendance_usecase.dart'
+    as _i618;
 import 'package:attendance_manager/domain/usecases/toggle_attendance_status_usecase.dart'
     as _i483;
 import 'package:attendance_manager/domain/usecases/update_attendance_usecase.dart'
@@ -72,6 +74,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i606.GetAttendanceByIdUseCase(gh<_i227.AttendanceRepository>()));
     gh.factory<_i375.GetAttendancesUseCase>(
         () => _i375.GetAttendancesUseCase(gh<_i227.AttendanceRepository>()));
+    gh.factory<_i618.StartAttendanceUseCase>(
+        () => _i618.StartAttendanceUseCase(gh<_i227.AttendanceRepository>()));
     gh.factory<_i483.ToggleAttendanceStatusUseCase>(() =>
         _i483.ToggleAttendanceStatusUseCase(gh<_i227.AttendanceRepository>()));
     gh.factory<_i272.UpdateAttendanceUseCase>(
@@ -85,6 +89,7 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i111.AttendanceExecutionCubit(
               gh<_i606.GetAttendanceByIdUseCase>(),
               gh<_i621.FinishAttendanceUseCase>(),
+              gh<_i618.StartAttendanceUseCase>(),
               gh<_i330.ImageStorageService>(),
             ));
     gh.factory<_i282.AttendanceFormCubit>(() => _i282.AttendanceFormCubit(
